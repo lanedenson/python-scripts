@@ -35,7 +35,7 @@ combined_data = combined_data.dropna()
 X = combined_data['days'].values.reshape(-1, 1)
 
 # Function to perform linear regression and calculate percentage improvement
-def calculate_percentage_improvement(y, y_label):
+def calculate_percentage_improvement(y):
     model = LinearRegression()
     model.fit(X, y)
     y_pred = model.predict(X)
@@ -52,8 +52,10 @@ for score, label in zip(
      combined_data['best_practices_score'], combined_data['seo_score']],
     ['Performance Score', 'Accessibility Score', 'Best Practices Score', 'SEO Score']
 ):
-    improvement = calculate_percentage_improvement(score, label)
+    improvement = calculate_percentage_improvement(score)
     print(f"{label} - Percentage Improvement: {improvement:.2f}%")
+
+print ()
 
 # Calculate the highest average score for each category
 average_scores = {
