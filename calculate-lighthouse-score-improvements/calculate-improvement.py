@@ -1,5 +1,6 @@
 # Calculate the average Lighthouse score improvements over time for
-# Performance Score, Accessibility Score, Best Practices Score, and SEO Score
+# Performance Score, Accessibility Score, Best Practices Score, and
+# SEO Score from CSV data.
 
 import pandas as pd
 import numpy as np
@@ -7,7 +8,7 @@ import os
 from sklearn.linear_model import LinearRegression
 
 # Directory containing the CSV files
-directory = r'.\csv'
+directory = os.path.join(os.path.dirname(__file__), 'csv')
 
 # Initialize an empty DataFrame to store the combined data
 combined_data = pd.DataFrame()
