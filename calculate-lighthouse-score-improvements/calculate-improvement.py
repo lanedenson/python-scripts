@@ -1,3 +1,6 @@
+# Calculate the average Lighthouse score improvements over time for
+# Performance Score, Accessibility Score, Best Practices Score, and SEO Score
+
 import pandas as pd
 import numpy as np
 import os
