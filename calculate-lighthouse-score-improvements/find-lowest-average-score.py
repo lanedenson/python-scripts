@@ -1,18 +1,23 @@
+# This script finds the file with the lowest average score for each metric
+
+from pathlib import Path
 import pandas as pd
-import os
-from sklearn.linear_model import LinearRegression
 
 # Directory containing the CSV files
-directory = os.path.join(os.path.dirname(__file__), 'csv')
-
-# Initialize a dictionary to store the average scores for each file
-file_scores = {}
+directory = Path(__file__).parent / 'csv'
 
 # Define labels
 PERF = 'Performance Score'
 ACC = 'Accessibility Score'
 BP = 'Best Practices'
 SEO = 'SEO Score'
+METRICS = [PERF, ACC, BP, SEO]
+
+# Initialize dictionaries to store the lowest and highest average scores and corresponding files
+lowest_avg_files = {metric: None for metric in METRICS}
+lowest_avg_values = {metric: float('inf') for metric in METRICS}
+highest_avg_files = {metric: None for metric in METRICS}
+highest_avg_values = {metric: float('-inf') for metric in METRICS}
 
 # Function to calculate the average score for each metric
 def calculate_average_scores(data):
@@ -24,31 +29,23 @@ def calculate_average_scores(data):
     }
 
 # Loop through all CSV files in the directory and calculate average scores
-for filename in os.listdir(directory):
-    if filename.endswith('.csv'):
-        file_path = os.path.join(directory, filename)
-        data = pd.read_csv(file_path)
-
-        # Keep only the relevant columns
-        data = data[['date', 'performance_score', 'accessibility_score', 'best_practices_score', 'seo_score']]
-
-        # Drop rows with any missing values
-        data = data.dropna()
-
-        # Calculate average scores for the current file and store them
+for file_path in directory.glob('*.csv'):
+    try:
+        data = pd.read_csv(file_path, usecols=['performance_score', 'accessibility_score', 'best_practices_score', 'seo_score']).dropna()
         avg_scores = calculate_average_scores(data)
-        file_scores[filename] = avg_scores
 
-# Identify the file with the lowest average score for each metric
-lowest_avg_files = {metric: None for metric in [PERF, ACC, BP, SEO]}
-lowest_avg_values = {metric: float('inf') for metric in [PERF, ACC, BP, SEO]}
-
-for filename, scores in file_scores.items():
-    for metric, score in scores.items():
-        if score < lowest_avg_values[metric]:
-            lowest_avg_values[metric] = score
-            lowest_avg_files[metric] = filename
+        # Update the lowest and highest average scores and corresponding files
+        for metric, score in avg_scores.items():
+            if score < lowest_avg_values[metric]:
+                lowest_avg_values[metric] = score
+                lowest_avg_files[metric] = file_path.name
+            if score > highest_avg_values[metric]:
+                highest_avg_values[metric] = score
+                highest_avg_files[metric] = file_path.name
+    except Exception as e:
+        print(f"Error processing file {file_path.name}: {e}")
 
 # Print the results
-for metric, filename in lowest_avg_files.items():
-    print(f"Lowest Average {metric}: {lowest_avg_values[metric]:.2f} found in file: {filename}")
+for metric in METRICS:
+    print(f"\nLowest Average {metric}: {lowest_avg_values[metric]:.2f}\nFile: {lowest_avg_files[metric]}")
+    print(f"\nHighest Average {metric}: {highest_avg_values[metric]:.2f}\nFile: {highest_avg_files[metric]}\n")
