@@ -8,13 +8,19 @@ directory = os.path.join(os.path.dirname(__file__), 'csv')
 # Initialize a dictionary to store the average scores for each file
 file_scores = {}
 
+# Define labels
+PERF = 'Performance Score'
+ACC = 'Accessibility Score'
+BP = 'Best Practices'
+SEO = 'SEO Score'
+
 # Function to calculate the average score for each metric
 def calculate_average_scores(data):
     return {
-        'Performance Score': data['performance_score'].mean(),
-        'Accessibility Score': data['accessibility_score'].mean(),
-        'Best Practices Score': data['best_practices_score'].mean(),
-        'SEO Score': data['seo_score'].mean()
+        PERF: data['performance_score'].mean(),
+        ACC: data['accessibility_score'].mean(),
+        BP: data['best_practices_score'].mean(),
+        SEO: data['seo_score'].mean()
     }
 
 # Loop through all CSV files in the directory and calculate average scores
@@ -34,8 +40,8 @@ for filename in os.listdir(directory):
         file_scores[filename] = avg_scores
 
 # Identify the file with the lowest average score for each metric
-lowest_avg_files = {metric: None for metric in ['Performance Score', 'Accessibility Score', 'Best Practices Score', 'SEO Score']}
-lowest_avg_values = {metric: float('inf') for metric in ['Performance Score', 'Accessibility Score', 'Best Practices Score', 'SEO Score']}
+lowest_avg_files = {metric: None for metric in [PERF, ACC, BP, SEO]}
+lowest_avg_values = {metric: float('inf') for metric in [PERF, ACC, BP, SEO]}
 
 for filename, scores in file_scores.items():
     for metric, score in scores.items():
