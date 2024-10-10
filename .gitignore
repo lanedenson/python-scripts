@@ -159,5 +159,8 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+# Ignore any folders with csv in the name
+*csv/
+
 # Don't include data in CSV folder
 calculate-lighthouse-score-improvements/csv
